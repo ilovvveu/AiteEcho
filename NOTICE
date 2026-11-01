@@ -1,0 +1,31 @@
+AiteEcho（艾特回声）
+Current maintainer / 当前维护者：ilovvveu
+Maintainer profile: https://github.com/ilovvveu
+Repository: https://github.com/ilovvveu/AiteEcho
+
+本维护版本由ilovvveu主导持续二次开发与维护，在上游qq-ai-bot基础上
+进行了大量功能扩展、架构调整、安全加固与部署适配。主要包含独立API
+后端、有界上下文、图片/引用/文档/OCR、分级权限与逐人规则、发言分析、
+风格/全局规则、命令语音与SILK转换、分环节诊断及可选@存档等新增或
+显著改造。具体范围与沿用基础见docs/derivative-changes.md。
+这不是原样镜像，也不声称全部代码由本人从零独立创作。
+
+Original source / 原始来源：
+qq-ai-bot by Shirong Lu (happysnaker)
+https://github.com/happysnaker/qq-ai-bot
+Locally obtained source baseline: 1c940a0
+
+This is an independently maintained derivative with substantial changes,
+not an endorsement by the original author. Original copyright and MIT terms
+remain in LICENSE; modifications in this distribution use the same MIT terms.
+The new name and maintainer credit do not transfer upstream or third-party
+rights. Publishing this source does not imply official endorsement or a hosted service.
+
+本项目不是腾讯QQ、NapCat、OpenAI、Codex或模型/API提供方的官方产品，
+不代表与这些主体存在授权、合作或背书。旧推广、付款二维码、捐款和原
+维护联系入口不作为本分发的功能或服务；原版权声明仍保留。
+
+QQ/NapCat/OneBot实现、Node.js、Python包、FFmpeg及npm依赖是独立第三方
+项目，适用各自许可与条款。本仓库不分发QQ或NapCat程序、账号、登录态、
+密钥、真实聊天、个人运行配置或API额度。部署后实际数据发送/留存与
+责任边界另见docs/features.md及DISCLAIMER.md；免责声明不改写或收回MIT授权。

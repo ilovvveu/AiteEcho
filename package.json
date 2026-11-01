@@ -1,0 +1,109 @@
+{
+  "name": "aite-echo",
+  "version": "0.2.0",
+  "private": true,
+  "description": "Self-hosted QQ assistant with independent API calls, bounded context, permissions, OCR, documents and optional voice.",
+  "author": { "name": "ilovvveu", "url": "https://github.com/ilovvveu" },
+  "type": "module",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "!dist/**/*.test.*",
+    "!dist/**/fixtures/**",
+    "!dist/test-support/**",
+    "README.md",
+    "ARCHITECTURE.md",
+    "LICENSE",
+    "NOTICE",
+    "DISCLAIMER.md",
+    "assets/reverix-banner.png",
+    "docs",
+    "examples/styles",
+    "examples/group-rules.example.json",
+    "examples/reply-rules.json",
+    "scripts/read-document.py",
+    "scripts/vision-ocr.swift",
+    "scripts/requirements-documents.txt",
+    ".env.example"
+  ],
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "start": "node dist/index.js",
+    "build": "tsc -p tsconfig.build.json",
+    "audit:release": "node scripts/audit-release.mjs",
+    "smoke:build": "node scripts/smoke-build.mjs",
+    "mock-agent": "tsx src/examples/mock-acp-agent.ts",
+    "smoke:agent": "tsx src/examples/acp-agent-smoke.ts",
+    "smoke:traex": "tsx src/examples/traex-smoke.ts",
+    "smoke:traecli": "tsx src/examples/traex-smoke.ts",
+    "e2e:fake-onebot:traex": "tsx src/examples/fake-onebot-traex-e2e.ts",
+    "e2e:fake-onebot:traecli": "tsx src/examples/fake-onebot-traex-e2e.ts",
+    "status:napcat:macos": "tsx src/tools/napcat-macos.ts status",
+    "setup:napcat:macos": "tsx src/tools/napcat-macos.ts install",
+    "launch:napcat:macos": "tsx src/tools/napcat-macos.ts launch --restart",
+    "restore:qq:macos": "tsx src/tools/napcat-macos.ts restore",
+    "bot:macos": "tsx src/tools/qq-bot-macos.ts",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "check": "npm run lint && npm run typecheck && npm run test"
+  },
+  "keywords": [
+    "qq",
+    "onebot",
+    "napcat",
+    "ai",
+    "agent",
+    "acp",
+    "bot",
+    "typescript",
+    "onebot-11",
+    "llonebot",
+    "qq-bot",
+    "agent-client-protocol",
+    "chat-bridge",
+    "self-hosted",
+    "docker"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@agentclientprotocol/sdk": "^1.1.0",
+    "@types/qrcode": "^1.5.6",
+    "https-proxy-agent": "9.1.0",
+    "pg": "^8.22.0",
+    "pino": "^10.3.1",
+    "pino-pretty": "^13.1.2",
+    "qrcode": "^1.5.4",
+    "redis": "^6.1.0",
+    "silk-wasm": "3.7.1",
+    "ws": "^8.21.0",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.0",
+    "@types/node": "^26.1.1",
+    "@types/pg": "^8.20.0",
+    "@types/ws": "^8.18.1",
+    "eslint": "^10.0.0",
+    "globals": "^17.7.0",
+    "tsx": "^4.23.0",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.63.0",
+    "vitest": "^4.1.10"
+  },
+  "overrides": {
+    "minimatch": "^11.0.1"
+  },
+  "homepage": "https://github.com/ilovvveu/AiteEcho#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ilovvveu/AiteEcho.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ilovvveu/AiteEcho/issues"
+  }
+}

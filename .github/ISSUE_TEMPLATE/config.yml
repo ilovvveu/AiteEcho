@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: 配置与常见问题
+    url: https://github.com/ilovvveu/AiteEcho/blob/main/docs/faq.md
+    about: 提问前检查配置，并删除密钥、QQ标识、聊天及原始日志。
+  - name: 安全问题
+    url: https://github.com/ilovvveu/AiteEcho/blob/main/SECURITY.md
+    about: 不要公开漏洞利用细节或敏感信息。

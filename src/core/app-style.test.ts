@@ -1,0 +1,48 @@
+import { mkdtemp, mkdir, readFile, writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import path from 'node:path';
+import pino from 'pino';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import { loadMessageTestConfig as loadConfig } from '../test-support/config.js';
+import { BotApplication } from './app.js';
+
+afterEach(() => vi.restoreAllMocks());
+describe('owner-only style commands at the actual application entry', () => {
+  it('starts blank, denies admin/member, persists owner changes, and does not call the model for commands', async () => {
+    const dir = await mkdtemp(path.join(tmpdir(), 'qq-app-style-'));
+    const presets = path.join(dir, 'styles'); await mkdir(presets);
+    await writeFile(path.join(presets, 'default.txt'), ''); await writeFile(path.join(presets, '自然.txt'), 'TEST_FRIENDLY_STYLE');
+    const stateFile = path.join(dir, 'selections.json');
+    const config = loadConfig({ BOT_REPLY_STYLE_DIR: presets, BOT_REPLY_STYLE_STATE_FILE: stateFile, ONEBOT_ALLOWED_GROUPS: '100', ONEBOT_ALLOWED_USERS: '1', ONEBOT_OWNER_USERS: '1', ONEBOT_PROGRESS_MODE: 'off' });
+    config.onebot.groupPolicies['100'] = { id: '100', allowAllMembers: true, requireMention: true, replyLimits: { admin: 5, member: 3 } };
+    const app = new BotApplication(config, pino({ enabled: false })) as any;
+    const sendPrompt = vi.fn(async () => ({ text: 'OK', images: [], sessionId: 'test', stopReason: 'end_turn' }));
+    const reset = vi.fn();
+    app.conversations = { getPersisted: () => undefined, getOrCreate: () => ({ bridge: { sendPrompt }, lastActivityAt: Date.now() }), persistRuntime: vi.fn(), reset };
+    const sendText = vi.spyOn(app.gateway, 'sendText').mockResolvedValue(undefined);
+    vi.spyOn(app.gateway, 'sendPayload').mockResolvedValue([]);
+    app.gateway.transport = { sendAction: vi.fn(async (_a: string, p: any) => ({ retcode: 0, data: { group_id: p.group_id, user_id: p.user_id, role: p.user_id === '2' ? 'admin' : 'member' } })) };
+    let seq = 0;
+    const event = (user: string, text: string, mention = true, group = true) => ({ post_type: 'message', message_type: group ? 'group' : 'private', group_id: group ? '100' : undefined, user_id: user, self_id: '999', message_id: String(++seq), message: [...(mention && group ? [{ type: 'at', data: { qq: '999' } }] : []), { type: 'text', data: { text } }] });
+    await app.handleIncomingPayload(event('2', '/style 自然'));
+    await app.handleIncomingPayload(event('3', '/style list'));
+    expect(sendText.mock.calls.every(c => String(c[1]).includes('主人'))).toBe(true);
+    expect(app.replyStyle.current('group:100')).toBe('default');
+    await app.handleIncomingPayload(event('1', '/style 自然', false));
+    expect(app.replyStyle.current('group:100')).toBe('default');
+    await app.handleIncomingPayload(event('1', '/style list'));
+    expect(String(sendText.mock.calls.at(-1)![1])).toContain('default（默认空白');
+    await app.handleIncomingPayload(event('1', '/style 自然'));
+    expect(sendPrompt).not.toHaveBeenCalled();
+    expect(JSON.parse(await readFile(stateFile, 'utf8')).conversations['group:100']).toBe('自然');
+    await app.handleIncomingPayload(event('1', '风格测试'));
+    expect((sendPrompt.mock.calls as unknown[][])[0]![0]).toMatchObject({ systemPrompt: expect.stringContaining('TEST_FRIENDLY_STYLE') });
+    await app.handleIncomingPayload(event('1', '/reset'));
+    expect(reset).toHaveBeenCalled(); expect(app.replyStyle.current('group:100')).toBe('自然');
+    await app.handleIncomingPayload(event('1', '/style default'));
+    expect(app.replyStyle.get('group:100')).toBe('');
+    await app.handleIncomingPayload(event('1', '/style show', true, false));
+    expect(String(sendText.mock.calls.at(-1)![1])).toContain('空白');
+    expect(sendPrompt).toHaveBeenCalledTimes(1);
+  });
+});

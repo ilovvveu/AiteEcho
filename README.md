@@ -104,3 +104,4 @@ smoke:build只用本地虚拟API/OneBot，不发真实QQ消息、不调用收费
 - [API及故障定位](docs/direct-api.md) · [语音](docs/voice.md) · [可选风格](docs/style-catalog.md)
 - [二次开发与大量改动](docs/derivative-changes.md) · [来源NOTICE](NOTICE) · [MIT许可](LICENSE)
 - [风险与免责](DISCLAIMER.md) · [安全报告](SECURITY.md) · [参与维护](CONTRIBUTING.md) · [文档参考](docs/documentation-references.md)
+- [依赖升级与大版本迁移策略](docs/dependency-maintenance.md)

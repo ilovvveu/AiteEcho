@@ -8,11 +8,21 @@ updates:
       time: "09:00"
       timezone: "Asia/Shanghai"
     open-pull-requests-limit: 2
+    # Major migrations need dedicated compatibility work, not a grouped refresh.
+    ignore:
+      - dependency-name: "@agentclientprotocol/sdk"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "vitest"
+        update-types: ["version-update:semver-major"]
     groups:
       npm-production:
         dependency-type: "production"
+        update-types: ["minor", "patch"]
       npm-development:
         dependency-type: "development"
+        update-types: ["minor", "patch"]
     labels:
       - "dependencies"
       - "maintenance"
